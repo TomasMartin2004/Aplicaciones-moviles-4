@@ -1,18 +1,26 @@
+// src/screens/home/home.js
 import React from "react";
-import { View, Text } from "react-native";
-import { authStyles } from "../../styles/authStyles";
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { homeStyles } from "../../styles/homeStyles"; // crearemos esto ahora
 
-export default function Home() {
+export default function HomeScreen() {
+  const navigation = useNavigation();
+
   return (
-    <View style={authStyles.container}>
-      <View
-        style={[
-          authStyles.formContainer,
-          { justifyContent: "flex-start", paddingTop: 50 },
-        ]}
+    <View style={homeStyles.container}>
+      <Image
+        source={require("../../../assets/logo.png")} // usá un logo simple por ahora
+        style={homeStyles.logo}
+        resizeMode="contain"
+      />
+      <Text style={homeStyles.title}>Wordle Argentino 🇦🇷</Text>
+      <TouchableOpacity
+        style={homeStyles.playButton}
+        onPress={() => navigation.navigate("Game")}
       >
-        <Text style={authStyles.title}>Bienvenido al Home</Text>
-      </View>
+        <Text style={homeStyles.playButtonText}>¡Jugar!</Text>
+      </TouchableOpacity>
     </View>
   );
 }
