@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { authStyles } from "../../styles/authStyles";
+import { useTheme } from "../../utils/themeContext";
+import { Sun, Moon } from 'lucide-react-native';
 import { handleLogin } from "../../utils/auth";
 
 export default function Login() {
@@ -10,18 +11,40 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const navigation = useNavigation();
+  const { colors, isDark, toggleTheme } = useTheme();
+
+  const styles = createStyles(colors);
 
   return (
-    <View style={authStyles.container}>
-      <View style={authStyles.formContainer}>
-        <Text style={authStyles.title}>¡Bienvenido de nuevo!</Text>
-        <Text style={authStyles.subtitle}>Inicia sesión para continuar</Text>
+    <View style={styles.container}>
+      <StatusBar
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.background}
+      />
+      
+      {/* Botón de cambio de tema */}
+      <View style={styles.themeButtonContainer}>
+        <TouchableOpacity
+          style={styles.themeButton}
+          onPress={toggleTheme}
+        >
+          {isDark ? (
+            <Sun size={20} color={colors.textSecondary} />
+          ) : (
+            <Moon size={20} color={colors.textSecondary} />
+          )}
+        </TouchableOpacity>
+      </View>
 
-        <View style={authStyles.inputContainer}>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>¡Bienvenido de nuevo!</Text>
+        <Text style={styles.subtitle}>Inicia sesión para continuar</Text>
+
+        <View style={styles.inputContainer}>
           <TextInput
-            style={[authStyles.input, errors.email && authStyles.inputError]}
+            style={[styles.input, errors.email && styles.inputError]}
             placeholder="Correo electrónico"
-            placeholderTextColor="#4C566A"
+            placeholderTextColor={colors.textSecondary}
             value={email}
             onChangeText={(text) => {
               setEmail(text);
@@ -32,15 +55,15 @@ export default function Login() {
             editable={!loading}
           />
           {errors.email && (
-            <Text style={authStyles.errorText}>{errors.email}</Text>
+            <Text style={styles.errorText}>{errors.email}</Text>
           )}
         </View>
 
-        <View style={authStyles.inputContainer}>
+        <View style={styles.inputContainer}>
           <TextInput
-            style={[authStyles.input, errors.password && authStyles.inputError]}
+            style={[styles.input, errors.password && styles.inputError]}
             placeholder="Contraseña"
-            placeholderTextColor="#4C566A"
+            placeholderTextColor={colors.textSecondary}
             value={password}
             onChangeText={(text) => {
               setPassword(text);
@@ -50,27 +73,28 @@ export default function Login() {
             editable={!loading}
           />
           {errors.password && (
-            <Text style={authStyles.errorText}>{errors.password}</Text>
+            <Text style={styles.errorText}>{errors.password}</Text>
           )}
         </View>
 
         <TouchableOpacity
-          style={[authStyles.button, loading && authStyles.buttonDisabled]}
+          style={[styles.button, loading && styles.buttonDisabled]}
           onPress={() =>
             handleLogin(email, password, setErrors, setLoading, navigation)
           }
           disabled={loading}
         >
-          <Text style={authStyles.buttonText}>
+          <Text style={styles.buttonText}>
             {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
           </Text>
         </TouchableOpacity>
+        
         <TouchableOpacity
-          style={authStyles.linkButton}
+          style={styles.linkButton}
           onPress={() => navigation.navigate("Register")}
           disabled={loading}
         >
-          <Text style={authStyles.linkText}>
+          <Text style={styles.linkText}>
             ¿No tienes una cuenta? Regístrate
           </Text>
         </TouchableOpacity>
@@ -78,3 +102,86 @@ export default function Login() {
     </View>
   );
 }
+
+const createStyles = (colors) => StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  themeButtonContainer: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 1,
+  },
+  themeButton: {
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: colors.card,
+  },
+  formContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.text,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+  inputContainer: {
+    marginBottom: 15,
+  },
+  input: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.card,
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    fontSize: 16,
+    color: colors.text,
+  },
+  inputError: {
+    borderColor: colors.error,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: 14,
+    marginTop: 5,
+    marginLeft: 5,
+  },
+  button: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: 15,
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: colors.background,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  linkButton: {
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  linkText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});

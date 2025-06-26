@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, TextInput, TouchableOpacity, Text } from "react-native";
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, StatusBar } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { authStyles } from "../../styles/authStyles";
+import { useTheme } from "../../utils/themeContext";
+import { Sun, Moon } from 'lucide-react-native';
 import { handleRegister } from "../../utils/auth";
 
 export default function Register() {
@@ -11,18 +12,40 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const navigation = useNavigation();
+  const { colors, isDark, toggleTheme } = useTheme();
+
+  const styles = createStyles(colors);
 
   return (
-    <View style={authStyles.container}>
-      <View style={authStyles.formContainer}>
-        <Text style={authStyles.title}>Crear Cuenta</Text>
-        <Text style={authStyles.subtitle}>Regístrate para comenzar</Text>
+    <View style={styles.container}>
+      <StatusBar
+        barStyle={isDark ? 'light-content' : 'dark-content'}
+        backgroundColor={colors.background}
+      />
+      
+      {/* Botón de cambio de tema */}
+      <View style={styles.themeButtonContainer}>
+        <TouchableOpacity
+          style={styles.themeButton}
+          onPress={toggleTheme}
+        >
+          {isDark ? (
+            <Sun size={20} color={colors.textSecondary} />
+          ) : (
+            <Moon size={20} color={colors.textSecondary} />
+          )}
+        </TouchableOpacity>
+      </View>
 
-        <View style={authStyles.inputContainer}>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Crear Cuenta</Text>
+        <Text style={styles.subtitle}>Regístrate para comenzar</Text>
+
+        <View style={styles.inputContainer}>
           <TextInput
-            style={[authStyles.input, errors.email && authStyles.inputError]}
+            style={[styles.input, errors.email && styles.inputError]}
             placeholder="Correo electrónico"
-            placeholderTextColor="#4C566A"
+            placeholderTextColor={colors.textSecondary}
             value={email}
             onChangeText={(text) => {
               setEmail(text);
@@ -33,15 +56,15 @@ export default function Register() {
             editable={!loading}
           />
           {errors.email && (
-            <Text style={authStyles.errorText}>{errors.email}</Text>
+            <Text style={styles.errorText}>{errors.email}</Text>
           )}
         </View>
 
-        <View style={authStyles.inputContainer}>
+        <View style={styles.inputContainer}>
           <TextInput
-            style={[authStyles.input, errors.password && authStyles.inputError]}
+            style={[styles.input, errors.password && styles.inputError]}
             placeholder="Contraseña"
-            placeholderTextColor="#4C566A"
+            placeholderTextColor={colors.textSecondary}
             value={password}
             onChangeText={(text) => {
               setPassword(text);
@@ -51,18 +74,18 @@ export default function Register() {
             editable={!loading}
           />
           {errors.password && (
-            <Text style={authStyles.errorText}>{errors.password}</Text>
+            <Text style={styles.errorText}>{errors.password}</Text>
           )}
         </View>
 
-        <View style={authStyles.inputContainer}>
+        <View style={styles.inputContainer}>
           <TextInput
             style={[
-              authStyles.input,
-              errors.confirmPassword && authStyles.inputError,
+              styles.input,
+              errors.confirmPassword && styles.inputError,
             ]}
             placeholder="Confirmar Contraseña"
-            placeholderTextColor="#4C566A"
+            placeholderTextColor={colors.textSecondary}
             value={confirmPassword}
             onChangeText={(text) => {
               setConfirmPassword(text);
@@ -72,19 +95,19 @@ export default function Register() {
             editable={!loading}
           />
           {errors.confirmPassword && (
-            <Text style={authStyles.errorText}>{errors.confirmPassword}</Text>
+            <Text style={styles.errorText}>{errors.confirmPassword}</Text>
           )}
         </View>
 
         {errors.password && (
-          <Text style={authStyles.passwordRequirements}>
+          <Text style={styles.passwordRequirements}>
             La contraseña debe contener:{"\n"}• Al menos 6 caracteres{"\n"}• Una
             letra mayúscula{"\n"}• Un número
           </Text>
         )}
 
         <TouchableOpacity
-          style={[authStyles.button, loading && authStyles.buttonDisabled]}
+          style={[styles.button, loading && styles.buttonDisabled]}
           onPress={() =>
             handleRegister(
               email,
@@ -97,16 +120,17 @@ export default function Register() {
           }
           disabled={loading}
         >
-          <Text style={authStyles.buttonText}>
+          <Text style={styles.buttonText}>
             {loading ? "Creando cuenta..." : "Crear Cuenta"}
           </Text>
         </TouchableOpacity>
+        
         <TouchableOpacity
-          style={authStyles.linkButton}
+          style={styles.linkButton}
           onPress={() => navigation.navigate("Login")}
           disabled={loading}
         >
-          <Text style={authStyles.linkText}>
+          <Text style={styles.linkText}>
             ¿Ya tienes una cuenta? Inicia sesión
           </Text>
         </TouchableOpacity>
@@ -114,3 +138,93 @@ export default function Register() {
     </View>
   );
 }
+
+const createStyles = (colors) => StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  themeButtonContainer: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 1,
+  },
+  themeButton: {
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: colors.card,
+  },
+  formContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: colors.text,
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+  inputContainer: {
+    marginBottom: 15,
+  },
+  input: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.card,
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    fontSize: 16,
+    color: colors.text,
+  },
+  inputError: {
+    borderColor: colors.error,
+  },
+  errorText: {
+    color: colors.error,
+    fontSize: 14,
+    marginTop: 5,
+    marginLeft: 5,
+  },
+  passwordRequirements: {
+    color: colors.textSecondary,
+    fontSize: 12,
+    marginBottom: 15,
+    marginLeft: 5,
+    lineHeight: 18,
+  },
+  button: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingVertical: 15,
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: colors.background,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  linkButton: {
+    alignItems: 'center',
+    paddingVertical: 10,
+  },
+  linkText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});
