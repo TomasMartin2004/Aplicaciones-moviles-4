@@ -404,7 +404,7 @@ const WordleArgentino = () => {
               
               <Text style={styles.textoModal}>
                 🇦🇷 <Text style={styles.textoModalBold}>Ejemplos de palabras:</Text>
-                {'\n'}TANGO, ASADO, BIRRA, PIBE, MINA, BONDI, LABUR, GUITA, MATE, DULCE
+                {'\n'}TANGO, ASADO, BIRRA, PIBES, MINAS, BONDI, GUITA, MATES, DULCE
               </Text>
               
               <Text style={styles.textoModalPequeno}>
