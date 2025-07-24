@@ -1,5 +1,5 @@
 // Diccionario extenso de argentinismos y lunfardo de 5 letras
-export const PALABRAS_ARGENTINAS = [
+const PALABRAS_ARGENTINAS = [
   // Lunfardo clásico
   'AFANO', 'BAGRE', 'BIABA', 'BIRRA', 'BOCHE', 'BONDI', 'BULTO',
   'CACHO', 'CAFUA', 'CAMBA', 'CANYO', 'CHAJA', 'CHETO', 'CHORI', 'COIMA',
@@ -7,44 +7,40 @@ export const PALABRAS_ARGENTINAS = [
   'GUITA', 'INDIO', 'JERMU', 'LABUR', 'LANGA', 'MANGO', 'MERSA',
   'MORFI', 'PARDO', 'PIBE', 'PINGO', 'PLATA',
   'PUCHO', 'RANIO', 'RATIS', 'TANGO', 'TECA',
-  'YEGUA', 'ZAFA',
+  'YEGUA', 'ZAFAR',
   
   // Comida argentina
-  'ASADO', 'DULCE', 'EMPAN', 'FAINA', 'LOCRO', 'MATE',
-  'PIZZA', 'PROVO', 'QUESO', 'TARTA',
+  'ASADO', 'DULCE', 'FAINA', 'LOCRO', 'MATES', 'CHORI',
+  'PIZZA', 'PROVO', 'QUESO', 'TARTA', 'BIFES', 'MORCI',
   
   // Deportes y cultura
   'DIEGO', 'GOLES', 'MESSI', 'RIVER',
   
   // Regionalismos
   'CHACA', 'GAITA', 'PAMPA', 'POSTA', 'SAUCE', 'TABLA',
-  'UNION', 'VERSO', 'WACHO', 'YAPA',
+  'UNION', 'VERSO', 'WACHO',
   
   // Expresiones típicas
-  'BUENO', 'FACHA', 'GENIO', 'LOCO', 'MACHO', 'NEGRO',
-  'ONDA', 'RATA', 'SODA', 'TELE', 'VINO',
+  'BUENO', 'FACHA', 'GENIO', 'MACHO', 'NEGRO',
   
   // Más lunfardo
-  'BERSA', 'BULIN', 'FACA', 'GRUPO', 'HINCHA', 'KIOSK',
-  'LANA', 'MORBO', 'OVEJA', 'PINTA', 'QUEMA', 'ROCHO', 'TROLO',
+  'BERSA', 'BULIN', 'GRUPO', 'HINCHA', 'GORRA', 'BOTON',
+  'MORBO', 'OVEJA', 'PINTA', 'QUEMA', 'ROCHO', 'TROLO',
   
   // Palabras del Río de la Plata
-  'BARDO', 'FLACO', 'HORNO', 'KILO', 'LUNES',
+  'BARDO', 'FLACO', 'HORNO', 'LUNES',
   'MAMBO', 'NOCHE', 'POLLO', 'RESTO', 'SAQUE', 'TRAGO', 'VERDE',
-  
-  // Palabras comunes argentinas
-  'BOCHA', 'BRONCA', 'CHABON', 'GOMA', 'JEFE', 'JOYA', 'MINA',
-  'NENE', 'PAPA', 'RANCHO', 'TRUCHO', 'YUTA', 'ZONA'
+
 ];
 
 // Palabras muy fáciles para empezar
-export const PALABRAS_FACILES = [
-  'TANGO', 'ASADO', 'MANGO', 'MATE', 'DULCE', 'BIFE', 'VINO', 'PAPA',
-  'QUESO', 'PIZZA', 'BONDI', 'BIRRA', 'PIBE', 'MINA', 'LOCO', 'NEGRO'
+const PALABRAS_FACILES = [
+  'TANGO', 'ASADO', 'MANGO', 'MATE', 'DULCE', 'BIFES', 
+  'QUESO', 'PIZZA', 'BONDI', 'BIRRA', 'PIBES', 'LOCOS', 'NEGRO', 'MATES'
 ];
 
 // Frases motivacionales argentinas
-export const FRASES_MOTIVACIONALES = [
+const FRASES_MOTIVACIONALES = [
   "¡Bárbaro, loco!",
   "¡La pegaste de una!",
   "¡Qué crack que sos!",
@@ -55,7 +51,7 @@ export const FRASES_MOTIVACIONALES = [
   "¡Metele que va!"
 ];
 
-export const FRASES_DERROTA = [
+const FRASES_DERROTA = [
   "¡Qué garrón!",
   "¡La próxima la pegás!",
   "¡No te hagas drama!",
@@ -67,10 +63,12 @@ export const FRASES_DERROTA = [
 ];
 
 // Definiciones de algunas palabras para ayuda
-export const DEFINICIONES = {
+const DEFINICIONES = {
   'AFANO': 'Robo, hurto',
+  'ASADO': 'Parrillada argentina',
   'BAGRE': 'Persona fea',
   'BIABA': 'Golpiza, paliza',
+  'BIFES': 'Bistec, carne',
   'BIRRA': 'Cerveza',
   'BOCHE': 'Problema, lío',
   'BONDI': 'Autobús, colectivo',
@@ -79,20 +77,26 @@ export const DEFINICIONES = {
   'CHORI': 'Chorizo',
   'COIMA': 'Soborno',
   'CURDA': 'Borracho',
+  'DULCE': 'Dulce de leche',
   'FIACA': 'Pereza, flojera',
   'GARCA': 'Traidor, desleal',
   'GUITA': 'Dinero',
   'JERMU': 'Mujer, novia',
   'LABUR': 'Trabajo',
   'MANGO': 'Peso (moneda)',
+  'MATES': 'Infusión típica argentina',
   'MERSA': 'Persona ordinaria',
   'MORFI': 'Comida',
-  'PIBE': 'Chico, muchacho',
-  'PILCHA': 'Ropa',
   'PINGO': 'Caballo',
   'PUCHO': 'Cigarrillo',
-  'QUILOMBO': 'Desorden, lío',
-  'TRUCHO': 'Falso, adulterado',
-  'YUTA': 'Policía',
-  'ZAFA': 'Se salva, está bien'
+  'TANGO': 'Baile típico argentino',
+
 };
+
+module.exports = {
+  PALABRAS_ARGENTINAS,
+  PALABRAS_FACILES,
+  FRASES_MOTIVACIONALES,
+  FRASES_DERROTA,
+  DEFINICIONES
+}; 

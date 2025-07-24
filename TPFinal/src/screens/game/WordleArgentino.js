@@ -21,11 +21,12 @@ import {
   Delete
 } from 'lucide-react-native';
 import { 
-  PALABRAS_ARGENTINAS, 
-  FRASES_MOTIVACIONALES, 
-  FRASES_DERROTA,
-  DEFINICIONES 
-} from '../../utils/diccionarioArgentino';
+  obtenerPalabraAleatoria,
+  obtenerFraseMotivacional,
+  obtenerFraseDerrota,
+  obtenerDefinicion,
+  validarPalabra
+} from '../../services/wordleAPI';
 
 const { width } = Dimensions.get('window');
 
@@ -40,6 +41,8 @@ const WordleArgentino = () => {
   const { colors, isDark, toggleTheme } = useTheme();
   
   const [palabraObjetivo, setPalabraObjetivo] = useState('');
+  const [palabraData, setPalabraData] = useState(null);
+  const [cargandoPalabra, setCargandoPalabra] = useState(false);
   const [intentoActual, setIntentoActual] = useState('');
   const [intentos, setIntentos] = useState([]);
   const [juegoTerminado, setJuegoTerminado] = useState(false);
@@ -59,9 +62,14 @@ const WordleArgentino = () => {
     iniciarJuego();
   }, []);
 
-  const iniciarJuego = () => {
-    const palabraAleatoria = PALABRAS_ARGENTINAS[Math.floor(Math.random() * PALABRAS_ARGENTINAS.length)];
-    setPalabraObjetivo(palabraAleatoria);
+  const iniciarJuego = async () => {
+    setCargandoPalabra(true);
+    const data = await obtenerPalabraAleatoria();
+    setPalabraObjetivo(data.palabra);
+    setPalabraData(data);
+    console.log('Nueva palabra obtenida del backend:', data.palabra);
+
+    setCargandoPalabra(false);
     setIntentoActual('');
     setIntentos([]);
     setJuegoTerminado(false);
@@ -70,7 +78,7 @@ const WordleArgentino = () => {
   };
 
   const manejarTecla = (tecla) => {
-    if (juegoTerminado) return;
+    if (juegoTerminado || cargandoPalabra) return;
 
     if (tecla === 'ENTER') {
       if (intentoActual.length === 5) {
@@ -85,8 +93,9 @@ const WordleArgentino = () => {
     }
   };
 
-  const procesarIntento = () => {
-    if (!PALABRAS_ARGENTINAS.includes(intentoActual)) {
+  const procesarIntento = async () => {
+    const esValida = await validarPalabra(intentoActual);
+    if (!esValida) {
       Alert.alert('¡Esa no va!', 'Esa palabra no está en nuestro diccionario argentino, che.');
       return;
     }
@@ -116,24 +125,32 @@ const WordleArgentino = () => {
     if (intentoActual === palabraObjetivo) {
       setGanado(true);
       setJuegoTerminado(true);
-      const fraseVictoria = FRASES_MOTIVACIONALES[Math.floor(Math.random() * FRASES_MOTIVACIONALES.length)];
+      
+      // Obtener frase motivacional y definición del backend
+      const fraseVictoria = await obtenerFraseMotivacional();
+      const definicion = palabraData?.definicion || await obtenerDefinicion(palabraObjetivo);
+      
       setTimeout(() => {
-        const definicion = DEFINICIONES[palabraObjetivo] ? 
-          `\n\n"${palabraObjetivo}": ${DEFINICIONES[palabraObjetivo]}` : '';
+        const textoDefinicion = definicion && definicion !== 'Definición no disponible' ? 
+          `\n\n"${palabraObjetivo}": ${definicion}` : '';
         Alert.alert(
           fraseVictoria, 
-          `¡La pegaste en ${nuevosIntentos.length} intentos! 🎉${definicion}`
+          `¡La pegaste en ${nuevosIntentos.length} intentos! 🎉${textoDefinicion}`
         );
       }, 500);
     } else if (nuevosIntentos.length >= 6) {
       setJuegoTerminado(true);
-      const fraseDerrota = FRASES_DERROTA[Math.floor(Math.random() * FRASES_DERROTA.length)];
+      
+      // Obtener frase de derrota y definición del backend
+      const fraseDerrota = await obtenerFraseDerrota();
+      const definicion = palabraData?.definicion || await obtenerDefinicion(palabraObjetivo);
+      
       setTimeout(() => {
-        const definicion = DEFINICIONES[palabraObjetivo] ? 
-          `\n\n"${palabraObjetivo}": ${DEFINICIONES[palabraObjetivo]}` : '';
+        const textoDefinicion = definicion && definicion !== 'Definición no disponible' ? 
+          `\n\n"${palabraObjetivo}": ${definicion}` : '';
         Alert.alert(
           fraseDerrota, 
-          `La palabra era: ${palabraObjetivo}${definicion}`
+          `La palabra era: ${palabraObjetivo}${textoDefinicion}`
         );
       }, 500);
     }
@@ -329,6 +346,16 @@ const WordleArgentino = () => {
         <Text style={styles.textoInfo}>
           Intentos: {intentos.length}/6
         </Text>
+        {cargandoPalabra && (
+          <Text style={[styles.textoInfo, { color: colors.primary }]}>
+            Obteniendo nueva palabra del servidor...
+          </Text>
+        )}
+        {palabraData?.dificultad && (
+          <Text style={[styles.textoInfo, { fontSize: 10 }]}>
+            Dificultad: {palabraData.dificultad}
+          </Text>
+        )}
       </View>
 
       {/* Modal de ayuda */}
